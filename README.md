@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+# NodeJS Hometask
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ryu обратился к студенту с заданием добавить возможность добавлять бойцов и менять их характеристики. Также Ryu хочет, чтобы было видно, кто конкретно пользуется приложением.
 
-## Available Scripts
+У Ryu уже есть страницы логина и регистрации, а также создание и просмотр характеристик бойцов, однако нет бэкэнд части.
 
-In the project directory, you can run:
+## Запуск проекта
+* **При первом запуске** необходимо выполнить 
+```
+. build-start.sh
+```
+(исполняемый файл `build-start.sh` находится в корне проекта)
+* Далее можно запускать с помощью команды
+```
+npm start
+```
 
-### `npm start`
+### Особености проекта
+* В папке client находится небольшое приложение на реакте, на котором есть вьюхи регистрации, логина, добавление и выбор бойцов. Этот проект размещен для ознакомления и основная цель - показать как клиент работает с сервером. Запросы от клиента можно посмотреть во вкладке Network в Chrome Dev tool. При разработке бэкэнд части используйте Postman для тестирования API.
+* В папке config находится конфигурация базы данных. В качестве базы данных выступает файл database.json.
+* В папке middlewares находятся промежуточные функции, которые отрабатывают перед контроллерами в папке routes.
+* В папке repositories находятся классы для работы с базой данных для каждой сущности. При желании про паттерн репозитория можно почитать <a href="https://habr.com/ru/post/248505/" traget="_blank">здесь</a> 
+* В папке routes находятся контроллеры для каждой сущности. Это точка входа для запроса в backend часть приложения.
+* В папке services находятся классы для обработки запросов по бизнес правилам для каждой сущности. Очень важно, чтобы контроллеры оставались чистыми, а все бизнес равила располагались в сервисах. Это позволяет эффективнее и читабельнее писать и переиспользовать код.
+* В папке models находятся модели основных сущностей приложения. Это то, в каком виде сущности хранятся в базе данных.
+* index.js - это точка входа в приложение и конфигурация самого сервера.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Задание
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Необходимо реализовать REST для сущностей пользователя и бойца.
+```
+    USER:
+        GET /api/users
+        GET /api/users/:id
+        POST /api/users
+        PUT /api/users/:id
+        DELETE /api/users/:id
 
-### `npm test`
+    FIGHTER
+        GET /api/fighters
+        GET /api/fighters/:id
+        POST /api/fighters
+        PUT /api/fighters/:id
+        DELETE /api/fighters/:id
+```
+___
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Для запросов на создание и обновление сущностей необходимо реализовать валидацию через middlewares. Правила валидации определяются сущностями, в папке models.   Валидировать необходимо:
 
-### `npm run build`
+* Наличие полей:
+    * При создании юзера - все поля обязательны, кроме `id`
+    * При создании бойца - все поля обязательны, кроме `id` и `health`
+    * При обновлении юзера или бойца - должно присутствовать хотя бы одно поле из модели
+* Id в body запросов должен отсутствовать
+* Наличие лишних полей(не из папки `models`) - запрещено
+* Формат полей: 
+    * email - только gmail почты
+    * phoneNumber: +380xxxxxxxxx
+    * power - число, 1 < power < 100
+    * defense - число, 1 < defense < 10
+    * health - число, 80 < health < 120, необязательное поле(по умолчанию - 100)
+    * password - строка, min 3 символа
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Все дополнительные валидации приветствуются.  
+**Использовать сторонние npm библиотеки для валидаций нельзя**
+___
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Также необходимо реализовать `response.middleware` для выдачи ответа сервера по следующим правилам:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Если все прошло хорошо - вернуть статус 200 и JSON
+* Ошибки
+    * Ошибки запроса (валидация, проблемы в обработке) - вернуть статус 400 и JSON с ошибкой
+    * Если что-то не найдено - вернуть статус 404 и JSON с ошибкой
 
-### `npm run eject`
+JSON ошибки формата
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+{
+    error: true,
+    message: ''
+}
+```
+___
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+В базе данных **не может быть**:
+* Юзеров с одинаковыми "email"
+* Юзеров с одиниковыми "phoneNumber"
+* Бойцов с одинаковыми "name"  
+(все поля case insensitive)
+___
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Постарайтесь давать лаконичные, но понятные сообщения об ошибках, например:
+* User not found
+* User entity to create isn't valid
+___
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+При реализации домашнего задания очень важно соблюдать структуру проекта и слои:
+* repositories - работа с базой
+* services - бизнес логика приложения
+* routes - прием запросов и отправка ответов
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Дополнительное задание
+* Добавить функционал битвы из предыдущего задания
+* Реализовать сохранение битвы и просмотр их историй

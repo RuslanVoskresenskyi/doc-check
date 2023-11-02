@@ -1,0 +1,14 @@
+{
+  "users": [],
+  "fighters": [
+    {
+      "name": "lou",
+      "health": 100,
+      "power": 1,
+      "defense": 1,
+      "id": "ddd42387-5f3d-435c-95e6-e2195fb23701",
+      "createdAt": "2023-11-01T18:33:12.084Z"
+    }
+  ],
+  "fights": []
+}

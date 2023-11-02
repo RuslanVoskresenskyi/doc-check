@@ -2,14 +2,22 @@ import { useEffect } from 'react'
 
 function App() {
 
-  useEffect(() => {
-    fetch('http://localhost:4000')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data) // Це ваш отриманий об'єкт
-        // Тут ви можете зробити що завгодно з цим об'єктом в React
-      })
-      .catch(error => console.error(error))
+  useEffect( async () => {
+
+    const fighterData = {
+      'name': 'lou',
+      'health': 100,
+      'power': 1,
+      'defense': 1, // 1 to 10
+    }
+
+    const response = await fetch('http://localhost:3050/api/users/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(fighterData),
+    })
   }, [])
 
   return (
