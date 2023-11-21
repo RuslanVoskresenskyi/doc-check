@@ -1,30 +1,39 @@
-import { useEffect } from 'react'
+import React, { useState } from 'react'
 
-function App() {
+import { splitTextByTitleWords } from './helpers/common'
+import { titleWords } from './enums/common'
+import { uploadDocxFile } from './api/user'
+import { extractDataFromText, isEmployeeInUniversity } from './helpers/titlePageHelper'
+import { universityEmployees } from './mockDatas/UniversityEmployees'
+import { documentValidate } from './helpers/validate'
 
-  useEffect( async () => {
+const FileUpload = () => {
+  const [file, setFile] = useState(null)
+  const [html, setHtml] = useState('')
 
-    const fighterData = {
-      'name': 'lou',
-      'health': 100,
-      'power': 1,
-      'defense': 1, // 1 to 10
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0])
+  }
+
+  const handleFileUpload = () => {
+    if (file) {
+      uploadDocxFile(file)
+        .then(data => {
+          setHtml(data.html)
+          documentValidate(splitTextByTitleWords(data.html, titleWords))
+        })
+    } else {
+      console.error('Файл не обраний')
     }
-
-    const response = await fetch('http://localhost:3050/api/users/test', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(fighterData),
-    })
-  }, [])
+  }
 
   return (
     <div>
-      
+      <input type='file' onChange={handleFileChange} />
+      <button onClick={handleFileUpload}>Відправити файл</button>
+      <div dangerouslySetInnerHTML={{ __html: html }}/>
     </div>
   )
 }
 
-export default App
+export default FileUpload
