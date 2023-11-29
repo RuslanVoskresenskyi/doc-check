@@ -14,6 +14,17 @@ export const splitTextByTitleWords = (text, words) => {
     return acc
   }, [])
 
+  console.log(groupedResult)
+
   return groupedResult
+}
+
+export const getTablesFromHtml = (html) => {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'text/html')
+
+  const tables = doc.getElementsByTagName('table')
+
+  return Array.from(tables).map((el) => el.outerHTML)
 }
 

@@ -27,11 +27,13 @@
   "homepage": "https://github.com/DmitrijDN/nodejs-2020-private#readme",
   "dependencies": {
     "axios": "^1.6.2",
+    "bcrypt": "^5.1.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.4.2",
+    "jsonwebtoken": "^9.0.2",
     "lodash.isempty": "^4.4.0",
     "lowdb": "^1.0.0",
     "mammoth": "^1.6.0",

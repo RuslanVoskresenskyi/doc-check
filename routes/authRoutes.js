@@ -4,15 +4,19 @@ const { responseMiddleware } = require('../middlewares/response.middleware');
 
 const router = Router();
 
-router.post('/login', (req, res, next) => {
+router.post('/',(req, res, next) => {
     try {
-        // TODO: Implement login action (get the user if it exist with entered credentials)
-        res.data = data;
+        const addedUser = AuthService.login(req.body)
+        next({
+            status: 200,
+            json: addedUser
+        })
     } catch (err) {
-        res.err = err;
-    } finally {
-        next();
+        next({
+            status: 400,
+            json: { error: true, message: 'Error with creating user.' }
+        })
     }
-}, responseMiddleware);
+}, responseMiddleware)
 
 module.exports = router;

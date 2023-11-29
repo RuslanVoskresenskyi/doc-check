@@ -1,5 +1,15 @@
 {
-  "users": [],
+  "users": [
+    {
+      "firstName": "Тетяна",
+      "lastName": "Конрад",
+      "email": "konrad@gmail.com",
+      "phoneNumber": "+380988098222",
+      "password": "111111",
+      "id": "02e8cdbc-d132-4e45-b4d3-f9ce00787f4e",
+      "createdAt": "2023-11-29T13:10:38.985Z"
+    }
+  ],
   "fighters": [
     {
       "name": "lou",

@@ -20,6 +20,10 @@ class BaseRepository {
     return this.dbContext.find(search).value()
   }
 
+  getTest(search) {
+    return this.dbContext;
+  }
+
   create(data) {
     data.id = this.generateId()
     data.createdAt = new Date()

@@ -18,6 +18,14 @@ class UserService {
         return item
     }
 
+    getUserByEmail(email) {
+        const item = UserRepository.getOne({ email })
+        if(!item) {
+            return null
+        }
+        return item
+    }
+
     getAllUser() {
         const item = UserRepository.getAll()
         if(!item) {
